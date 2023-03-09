@@ -12,6 +12,8 @@ const app = express();
 
 //載入TodoModel
 const Todo = require("./models/todo");
+//引用pody-parser
+const bodyParser = require("body-parser");
 
 //加入這段code，僅在非正式環境時，使用dotenv
 if (process.env.NODE_ENV !== "production") {
@@ -44,6 +46,20 @@ app.get("/", (req, res) => {
     .lean() // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
     .then((todos) => res.render("index", { todos })) // 將資料傳給 index 樣板
     .catch((error) => console.error(error)); // 錯誤處理
+});
+
+//設定"新增代辦事項頁面"的路由;
+app.get("/todos/new", (req, res) => {
+  return res.render("new");
+});
+//設定bodyParser
+app.use(bodyParser.urlencoded({ extended: true }));
+//接住使用者在form表單打的資料
+app.post("/todos", (req, res) => {
+  const name = req.body.name;
+  return Todo.create({ name })
+    .then(() => res.redirect("/"))
+    .catch((error) => console.log(error));
 });
 
 //伺服器監聽 port 3000
