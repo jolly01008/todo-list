@@ -52,6 +52,7 @@ app.get("/", (req, res) => {
 app.get("/todos/new", (req, res) => {
   return res.render("new");
 });
+
 //設定bodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
 //接住使用者在form表單打的資料
@@ -59,6 +60,15 @@ app.post("/todos", (req, res) => {
   const name = req.body.name;
   return Todo.create({ name })
     .then(() => res.redirect("/"))
+    .catch((error) => console.log(error));
+});
+
+//設定"瀏覽單筆詳細資料"的路由
+app.get("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render("detail", { todo }))
     .catch((error) => console.log(error));
 });
 
