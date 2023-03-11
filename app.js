@@ -40,7 +40,7 @@ db.once("open", () => {
 app.engine("hbs", exphbs({ defaultLayouts: "main", extname: ".hbs" }));
 app.set("view engine", "hbs");
 
-//設定路由;
+//==========設定index路由==========;
 app.get("/", (req, res) => {
   Todo.find() // 取出 Todo model 裡的所有資料
     .lean() // 把 Mongoose 的 Model 物件轉換成乾淨的 JavaScript 資料陣列
@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
     .catch((error) => console.error(error)); // 錯誤處理
 });
 
-//設定"新增代辦事項頁面"的路由;
+//==========設定"新增代辦事項頁面"的路由==========
 app.get("/todos/new", (req, res) => {
   return res.render("new");
 });
@@ -63,7 +63,7 @@ app.post("/todos", (req, res) => {
     .catch((error) => console.log(error));
 });
 
-//設定"瀏覽單筆詳細資料"的路由
+//==========設定"瀏覽單筆詳細資料"的路由==========
 app.get("/todos/:id", (req, res) => {
   const id = req.params.id;
   return Todo.findById(id)
@@ -72,7 +72,7 @@ app.get("/todos/:id", (req, res) => {
     .catch((error) => console.log(error));
 });
 
-//設定"Edit頁面"的路由
+//==========設定"Edit頁面"的路由==========
 app.get("/todos/:id/edit", (req, res) => {
   const id = req.params.id;
   return Todo.findById(id) //controller呼叫Todo model，Todo model把網址上的id傳給資料庫
@@ -93,6 +93,15 @@ app.post("/todos/:id/edit", (req, res) => {
       return todo.save(); //該筆todo資料存到資料庫
     })
     .then(() => res.redirect(`/todos/${id}`)) //若儲存成功，則導向"單筆詳細資料"頁面
+    .catch((error) => console.log(error));
+});
+
+//delete功能
+app.post("/todos/:id/delete", (req, res) => {
+  const id = req.params.id;
+  Todo.findById(id)
+    .then((todo) => todo.remove())
+    .then(() => res.redirect("/"))
     .catch((error) => console.log(error));
 });
 
