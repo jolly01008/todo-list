@@ -1,0 +1,12 @@
+<h1>Edit Page</h1>
+
+<form action="/todos/{{todo._id}}/edit" method="POST">
+  <input
+    type="text"
+    placeholder="list name"
+    name="name"
+    value="{{todo.name}}"
+  />
+  <button type="submit">Save</button>
+  <a href="/">back index page</a>
+</form>

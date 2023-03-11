@@ -1,4 +1,4 @@
-{{! <h2>這是index handlebars</h2> }}
+<h1>Index Page</h1>
 <a href="./todos/new">Create</a>
 
 <ul>
@@ -6,6 +6,7 @@
     <li>
       {{this.name}}
       <a href="./todos/{{this._id}}">detail</a>
+      <a href="./todos/{{this._id}}/edit">edit</a>
     </li>
 
   {{/each}}
