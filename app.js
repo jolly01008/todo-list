@@ -1,19 +1,14 @@
-//載入express框架
-const express = require("express");
-//載入mongoose
-const mongoose = require("mongoose");
-//設定連接埠
-const port = 3000;
-//載入handlebars
-const exphbs = require("express-handlebars");
 
-//啟動Express應用程式伺服器，設定app代表伺服器
-const app = express();
+const express = require("express") //載入express框架
+const mongoose = require("mongoose") //載入mongoose
+const port = 3000 //設定連接埠
+const exphbs = require("express-handlebars") //載入handlebars
 
-//載入TodoModel
-const Todo = require("./models/todo");
-//引用pody-parser
-const bodyParser = require("body-parser");
+const app = express() //啟動Express應用程式伺服器，設定app代表伺服器
+
+const Todo = require("./models/todo") //載入TodoModel
+const bodyParser = require("body-parser") //引用pody-parser
+const methodOverride = require("method-override")  //載入method-override
 
 //加入這段code，僅在非正式環境時，使用dotenv
 if (process.env.NODE_ENV !== "production") {
@@ -37,8 +32,10 @@ db.once("open", () => {
 });
 
 //載入handlebars，把樣板引擎指定為Handlebars
-app.engine("hbs", exphbs({ defaultLayouts: "main", extname: ".hbs" }));
-app.set("view engine", "hbs");
+app.engine("hbs", exphbs({ defaultLayouts: "main", extname: ".hbs" }))
+app.set("view engine", "hbs")
+app.use(bodyParser.urlencoded({ extended: true })) //設定bodyParser
+app.use(methodOverride('_method'))
 
 //==========設定index路由==========;
 app.get("/", (req, res) => {
@@ -54,8 +51,7 @@ app.get("/todos/new", (req, res) => {
   return res.render("new");
 });
 
-//設定bodyParser
-app.use(bodyParser.urlencoded({ extended: true }));
+
 //接住使用者在form表單打的資料
 app.post("/todos", (req, res) => {
   const name = req.body.name;
@@ -84,7 +80,7 @@ app.get("/todos/:id/edit", (req, res) => {
 
 //從"Edit頁面"運用form系列標籤特性，讓使用者更改名字後，所運作的程式碼
 //這個路由用來接住表單資料，並送往資料庫，就是CRUD裡的Update
-app.post("/todos/:id/edit", (req, res) => {
+app.put("/todos/:id", (req, res) => {
   console.log(req.body)
   const id = req.params.id
   const { name , isDone } = req.body //解構賦值，把req.body每一項屬性都拿出存成變數
@@ -92,7 +88,6 @@ app.post("/todos/:id/edit", (req, res) => {
     .then((todo) => {
       todo.name = name; //取得客戶端修改的name，存到該筆todo的name
       todo.isDone = isDone === "on" // 取得客戶端的isDone進行條件式比對，再更新資料庫的資料
-       
       return todo.save(); //該筆todo資料存到資料庫
     })
     .then(() => res.redirect(`/todos/${id}`)) //若儲存成功，則導向"單筆詳細資料"頁面
@@ -100,7 +95,7 @@ app.post("/todos/:id/edit", (req, res) => {
 });
 
 //delete功能
-app.post("/todos/:id/delete", (req, res) => {
+app.delete("/todos/:id", (req, res) => {
   const id = req.params.id;
   Todo.findById(id)
     .then((todo) => todo.remove())
