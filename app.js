@@ -4,6 +4,7 @@ const port = 3000 //設定連接埠
 const exphbs = require("express-handlebars") //載入handlebars
 const bodyParser = require("body-parser") //引用pody-parser
 const methodOverride = require("method-override")  //載入method-override
+const session = require("express-session")  //載入xpress-session
 
 require('./config/mongoose')
 const routes = require('./routes')  // 引用路由器
@@ -14,6 +15,12 @@ const PORT = process.env.PORT || 3000 // 如果在 Heroku 環境則使用 proces
 //載入handlebars，把樣板引擎指定為Handlebars
 app.engine("hbs", exphbs({ defaultLayouts: "main", extname: ".hbs" }))
 app.set("view engine", "hbs")
+app.use(session({
+  secret: 'ThisIsMySecret',
+  resave: false,
+  saveUninitialized: true
+}))
+
 app.use(bodyParser.urlencoded({ extended: true })) //設定bodyParser
 app.use(methodOverride('_method'))
 
