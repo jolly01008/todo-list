@@ -9,8 +9,18 @@
 
   <header>
     <nav class="navbar navbar-dark bg-primary justify-content-between" style="padding: 8px 16px"> 
-      <a class="navbar-brand" href="/">Todo List</a>
-      <a class="btn btn-outline-light" href="/todos/new" >Create</a>
+      <a class="btn btn-outline-light" href="/">
+        {{#if isAuthenticated}}
+          {{user.name}}'s 
+        {{/if}}
+        Todo List
+      </a>
+      
+      {{#if isAuthenticated}}
+        <a class="btn btn-outline-light" href="/users/logout">Logout</a>
+      {{else}}
+        <a class="btn btn-outline-light" href="/users/login">Login</a>
+      {{/if}}
     </nav>
   </header>
 
