@@ -5,6 +5,7 @@ const exphbs = require("express-handlebars") //載入handlebars
 const bodyParser = require("body-parser") //引用pody-parser
 const methodOverride = require("method-override")  //載入method-override
 const session = require("express-session")  //載入express-session
+const flash = require("connect-flash") //引用套件
 
 require('./config/mongoose')
 const routes = require('./routes')  // 引用路由器
@@ -26,10 +27,12 @@ app.use(bodyParser.urlencoded({ extended: true })) //設定bodyParser
 app.use(methodOverride('_method'))
 
 usePassport(app) // 呼叫 Passport 函式並傳入 app，這條要寫在路由之前
-
+app.use(flash())  //掛載套件
 app.use((req , res , next) => {
   res.locals.isAuthenticated = req.isAuthenticated()
   res.locals.user = req.user
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg')
   next()
 })
 
