@@ -28,7 +28,6 @@ router.post('/register', (req, res) => {
     errors.push({ message: '密碼與確認密碼不相符!'})
   }
   if(errors.length){
-    console.log(errors)
     return res.render('register',{
       errors,
       name,
