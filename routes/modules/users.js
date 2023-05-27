@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const passport = require("passport") // 引用 passport
+const bcrypt = require("bcryptjs") //載入bcryptjs套件
 
 const User = require("../../models/user")  //引入User model
 
@@ -49,12 +50,16 @@ router.post('/register', (req, res) => {
         confirmPassword
       })
     }
-    //如果還沒註冊，寫入資料庫
-    return User.create({
-      name , email , password
-    })
-    .then(() =>  res.redirect("/"))
-    .catch(err =>  console.log(err))
+    return bcrypt
+      .genSalt(10)
+      .then(salt => bcrypt.hash(password , salt))
+      .then(hash => User.create({
+        name,
+        email,
+        password: hash
+      }))
+      .then(() => res.redirect('/'))
+      .catch(err => console.log(err))
   })
 })
 
