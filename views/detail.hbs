@@ -4,7 +4,11 @@
       <input type="checkbox" name="isDone" {{#if todo.isDone}} checked {{/if}}disabled>
     </div>
     <input type="text" class="form-control" placeholder="name" name="name" value="{{todo.name}}" disabled>
-    <a class="btn btn-success" href="/todos/{{todo._id}}/edit">edit</a>
-    <button class="btn btn-danger" type="submit">delete</button>
+    <div>
+      <a class="btn btn-success" href="/todos/{{todo._id}}/edit">edit</a>
+      <form action="/todos/{{todo._id}}?_method=DELETE" method="POST" style="display:inline">
+        <button class="btn btn-danger" type="submit">delete</button>
+      </form>
+    </div>
   </div>
 </form>
