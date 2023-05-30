@@ -40,7 +40,6 @@ router.get("/:id/edit", (req, res) => {
 //從"Edit頁面"運用form系列標籤特性，讓使用者更改名字後，所運作的程式碼
 //這個路由用來接住表單資料，並送往資料庫，就是CRUD裡的Update
 router.put("/:id", (req, res) => {
-  console.log(req.body)
   const userId = req.user._id
   const _id = req.params.id
   const { name , isDone } = req.body //解構賦值，把req.body每一項屬性都拿出存成變數
